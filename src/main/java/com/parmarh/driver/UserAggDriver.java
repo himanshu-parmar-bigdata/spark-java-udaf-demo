@@ -23,12 +23,14 @@ public class UserAggDriver {
 				.csv("s3://mybucket/input/user_activities.txt").as(Encoders.bean(UserActivities.class));
 
 		sparkSession.udf().register("customAgg", new CustomUserAggUDF());
-
+		
+		// for debugging
 		inuptDS.show();
 
 		Dataset userAndDeviceAgg = inuptDS.groupBy(inuptDS.col("swid"), inuptDS.col("device_category")).agg(
 				sum(inuptDS.col("time_spent")).as("time_spent"), sum(inuptDS.col("video_start")).as("video_start"));
 
+		// for debugging
 		userAndDeviceAgg.printSchema();
 
 		Dataset udfOutput = userAndDeviceAgg.groupBy(userAndDeviceAgg.col("swid"))
@@ -63,8 +65,11 @@ public class UserAggDriver {
 		}
 
 		// write final dataset to HDFS or S3 as a AVRO in Parquet file format
-		output.coalesce(1).write().mode(SaveMode.Overwrite).format("com.databricks.spark.avro")
-				.parquet("s3://mybucket/output");
+		output
+		.coalesce(1)
+		.write().mode(SaveMode.Overwrite)
+		.format("com.databricks.spark.avro")
+		.parquet("s3://mybucket/output");
 	}
 
 }
