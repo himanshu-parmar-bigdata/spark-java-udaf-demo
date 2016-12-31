@@ -1,0 +1,13 @@
+swid,device_category,time_spent,video_start
+A,mob,5,1
+A,desk,5,2
+A,desk,5,3
+A,mob,5,2
+A,mob,20,16
+B,desk,5,2
+B,mob,5,2
+B,mob,5,2
+B,desk,5,2
+B,desk,5,2
+C,desk,5,2
+C,OTT,5,2
