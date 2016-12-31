@@ -19,8 +19,10 @@ public class UserAggDriver {
 																					// .setMaster("yarn").set("spark.driver.memory","4g"))
 				.getOrCreate();
 
-		Dataset<UserActivities> inuptDS = sparkSession.read().option("header", "true")
-				.csv("s3://mybucket/input/user_activities.txt").as(Encoders.bean(UserActivities.class));
+		Dataset<UserActivities> inuptDS = sparkSession.read()
+				.option("header", "true")
+				.csv("s3://mybucket/input/user_activities.txt")
+				.as(Encoders.bean(UserActivities.class));
 
 		sparkSession.udf().register("customAgg", new CustomUserAggUDF());
 		
@@ -32,7 +34,8 @@ public class UserAggDriver {
 
 		// for debugging
 		userAndDeviceAgg.printSchema();
-
+		
+		// calling UDF along with expected input columns
 		Dataset udfOutput = userAndDeviceAgg.groupBy(userAndDeviceAgg.col("swid"))
 				.agg(callUDF("customAgg", userAndDeviceAgg.col("device_category"), userAndDeviceAgg.col("time_spent"),
 						userAndDeviceAgg.col("video_start")).as("multicolumn"));
