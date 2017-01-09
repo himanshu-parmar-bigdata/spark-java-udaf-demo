@@ -1,1 +1,9 @@
 theme: jekyll-theme-tactile
+gems:
+  - jekyll-seo-tag
+  <html>
+  <head>
+    {% include head.html %}
+    {% seo %}
+  </head>
+</html>
